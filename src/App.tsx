@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import React, { useRef } from 'react';
 
 const mockData = [
   { month: 'Apr', value: 45000, date: '2024-04' },
@@ -32,13 +33,42 @@ const variables = [
 const variableCategories = ['All', 'Category 1', 'Category 2', 'Category 3'];
 
 
+
 function App() {
   const [editVariablesOpen, setEditVariablesOpen] = useState(false);
   const [hoverData, setHoverData] = useState<any>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
   const [selectedVariables, setSelectedVariables] = useState<string[]>(['co2-distribution', 'fleet-sizing']);
   const [selectCategory, setSelectCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [hoveredVariable, setHoveredVariable] = useState<string | null>(null);
+  const [showContext, setShowContext] = useState<string | null>(null);
+  const hoverTimer = useRef<NodeJS.Timeout | null>(null);
+
+  const handleVariableHover = (variableId: string) => {
+    setHoveredVariable(variableId);
+
+    // Clear any existing timer
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+    }
+
+    // Set 1.5 second timer
+    hoverTimer.current = setTimeout(() => {
+      setShowContext(variableId);
+    }, 1500);
+  };
+
+  const handleVariableLeave = () => {
+    setHoveredVariable(null);
+    setShowContext(null);
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+  };
 
   return (
     <div className="app">
@@ -109,19 +139,19 @@ function App() {
                 </div>
                 <div className="chart-area">
                   {/* Responsive container for the chart, library suggested by Claude */}
-                  <ResponsiveContainer width="100%" height="100%"> 
+                  <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={mockData}>
-                      <XAxis 
-                        dataKey = "month"
+                      <XAxis
+                        dataKey="month"
                         axisLine={false}
                         tickLine={false}
-                        tick={ {fill: '#888', fontSize: 12} }
+                        tick={{ fill: '#888', fontSize: 12 }}
                       />
                       <YAxis
                         axisLine={false}
                         tickLine={false}
-                        tick={ {fill: '#888', fontSize: 12} }
-                        tickFormatter={(value) => `€${value/1000}K`} 
+                        tick={{ fill: '#888', fontSize: 12 }}
+                        tickFormatter={(value) => `€${value / 1000}K`}
                       />
                       <Line
                         type="monotone"
@@ -130,7 +160,7 @@ function App() {
                         strokeWidth={2}
                         dot={{ fill: '#9fef00', strokeWidth: 2, r: 6 }}
                         activeDot={{ r: 8, stroke: '#9fef00', strokeWidth: 2 }}
-                        />
+                      />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: '#2a2a2a',
@@ -139,7 +169,7 @@ function App() {
                           color: '#fff'
                         }}
                         formatter={(value: any) => [`€${value.toLocaleString()}`, 'Revenue']}
-                        />
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -218,11 +248,15 @@ function App() {
                   onClick={() => {
                     if (selectedVariables.includes('carbon-1')) {
                       setSelectedVariables(selectedVariables.filter(id => id !== 'carbon-1'));
-                    } 
+                    }
                     else {
                       setSelectedVariables([...selectedVariables, 'carbon-1']);
                     }
                   }}
+
+                  onMouseEnter={() => handleVariableHover('carbon-1')}
+                  onMouseLeave={handleVariableLeave}
+
                   style={{
                     padding: '8px 12px',
                     backgroundColor: selectedVariables.includes('carbon-1') ? '#9fef00' : '#666',
@@ -240,11 +274,15 @@ function App() {
                   onClick={() => {
                     if (selectedVariables.includes('co2-distribution')) {
                       setSelectedVariables(selectedVariables.filter(id => id !== 'co2-distribution'));
-                    } 
+                    }
                     else {
                       setSelectedVariables([...selectedVariables, 'co2-distribution']);
                     }
                   }}
+
+                  onMouseEnter={() => handleVariableHover('co2-distribution')}
+                  onMouseLeave={handleVariableLeave}
+
                   style={{
                     padding: '8px 12px',
                     backgroundColor: selectedVariables.includes('co2-distribution') ? '#9fef00' : '#666',
@@ -262,11 +300,15 @@ function App() {
                   onClick={() => {
                     if (selectedVariables.includes('fleet-sizing')) {
                       setSelectedVariables(selectedVariables.filter(id => id !== 'fleet-sizing'));
-                    } 
+                    }
                     else {
                       setSelectedVariables([...selectedVariables, 'fleet-sizing']);
                     }
                   }}
+
+                  onMouseEnter={() => handleVariableHover('fleet-sizing')}
+                  onMouseLeave={handleVariableLeave}
+
                   style={{
                     padding: '8px 12px',
                     backgroundColor: selectedVariables.includes('fleet-sizing') ? '#9fef00' : '#666',
@@ -280,6 +322,208 @@ function App() {
                   Fleet sizing {selectedVariables.includes('fleet-sizing') ? '×' : '+'}
                 </button>
               </div>
+
+              <div className="variable-tag-example">
+                <h4 style={{ color: '#fff', margin: '20px 0 10px 0' }}>Variable Category 2</h4>
+
+                <button
+                  onClick={() => {
+                    if (selectedVariables.includes('energy-consumption')) {
+                      setSelectedVariables(selectedVariables.filter(id => id !== 'energy-consumption'));
+                    } else {
+                      setSelectedVariables([...selectedVariables, 'energy-consumption']);
+                    }
+                  }}
+                  onMouseEnter={() => handleVariableHover('energy-consumption')}
+                  onMouseLeave={handleVariableLeave}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: selectedVariables.includes('energy-consumption') ? '#9fef00' : '#666',
+                    color: selectedVariables.includes('energy-consumption') ? '#000' : '#fff',
+                    border: 'none',
+                    borderRadius: '20px',
+                    margin: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Energy Consumption {selectedVariables.includes('energy-consumption') ? '×' : '+'}
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (selectedVariables.includes('peak-demand')) {
+                      setSelectedVariables(selectedVariables.filter(id => id !== 'peak-demand'));
+                    } else {
+                      setSelectedVariables([...selectedVariables, 'peak-demand']);
+                    }
+                  }}
+                  onMouseEnter={() => handleVariableHover('peak-demand')}
+                  onMouseLeave={handleVariableLeave}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: selectedVariables.includes('peak-demand') ? '#9fef00' : '#666',
+                    color: selectedVariables.includes('peak-demand') ? '#000' : '#fff',
+                    border: 'none',
+                    borderRadius: '20px',
+                    margin: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Peak Demand {selectedVariables.includes('peak-demand') ? '×' : '+'}
+                </button>
+              </div>
+
+              <div className="variable-tag-example">
+                <h4 style={{ color: '#fff', margin: '20px 0 10px 0' }}>Variable Category 3</h4>
+
+                <button
+                  onClick={() => {
+                    if (selectedVariables.includes('utilization-rate')) {
+                      setSelectedVariables(selectedVariables.filter(id => id !== 'utilization-rate'));
+                    } else {
+                      setSelectedVariables([...selectedVariables, 'utilization-rate']);
+                    }
+                  }}
+                  onMouseEnter={() => handleVariableHover('utilization-rate')}
+                  onMouseLeave={handleVariableLeave}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: selectedVariables.includes('utilization-rate') ? '#9fef00' : '#666',
+                    color: selectedVariables.includes('utilization-rate') ? '#000' : '#fff',
+                    border: 'none',
+                    borderRadius: '20px',
+                    margin: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Utilization Rate {selectedVariables.includes('utilization-rate') ? '×' : '+'}
+                </button>
+              </div>
+
+              {/* Context Panel */}
+              {showContext === 'carbon-1' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '300px',
+                  left: '20px',
+                  backgroundColor: '#333',
+                  border: '1px solid #555',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  width: '250px',
+                  zIndex: 1000,
+                  color: '#fff'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Carbon 1</h4>
+                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
+                    Carbon tracking variable that monitors CO2 emissions across the charging network.
+                    Essential for environmental impact analysis and sustainability reporting.
+                  </p>
+                </div>
+              )}
+
+              {showContext === 'co2-distribution' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '300px',
+                  left: '20px',
+                  backgroundColor: '#333',
+                  border: '1px solid #555',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  width: '250px',
+                  zIndex: 1000,
+                  color: '#fff'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Co2 Distribution</h4>
+                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
+                    But what truly sets Switch apart is its versatility. It can be used as a scooter, a
+                    bike, or even a skateboard, making it suitable for people of all ages.
+                  </p>
+                </div>
+              )}
+
+              {showContext === 'fleet-sizing' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '300px',
+                  left: '20px',
+                  backgroundColor: '#333',
+                  border: '1px solid #555',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  width: '250px',
+                  zIndex: 1000,
+                  color: '#fff'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Fleet Sizing</h4>
+                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
+                    Optimization variable for determining optimal fleet size based on demand patterns,
+                    charging capacity, and operational efficiency metrics.
+                  </p>
+                </div>
+              )}
+
+              {showContext === 'energy-consumption' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '300px',
+                  left: '20px',
+                  backgroundColor: '#333',
+                  border: '1px solid #555',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  width: '250px',
+                  zIndex: 1000,
+                  color: '#fff'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Energy Consumption</h4>
+                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
+                    Real-time energy consumption tracking across all charging stations for optimization.
+                  </p>
+                </div>
+              )}
+
+              {showContext === 'peak-demand' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '300px',
+                  left: '20px',
+                  backgroundColor: '#333',
+                  border: '1px solid #555',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  width: '250px',
+                  zIndex: 1000,
+                  color: '#fff'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Peak Demand</h4>
+                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
+                    Peak demand analysis for capacity planning and load balancing optimization.
+                  </p>
+                </div>
+              )}
+
+              {showContext === 'utilization-rate' && (
+                <div style={{
+                  position: 'absolute',
+                  top: '300px',
+                  left: '20px',
+                  backgroundColor: '#333',
+                  border: '1px solid #555',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  width: '250px',
+                  zIndex: 1000,
+                  color: '#fff'
+                }}>
+                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Utilization Rate</h4>
+                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
+                    Station utilization metrics for efficiency analysis and resource allocation.
+                  </p>
+                </div>
+              )}
+
             </div>
           </div>
         </div>
