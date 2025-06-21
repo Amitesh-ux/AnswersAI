@@ -12,10 +12,33 @@ const mockData = [
   { month: 'Oct', value: 110000, date: '2024-10' }
 ]
 
+const variables = [
+  { id: 'carbon-1', name: 'Carbon 1', category: 'Category 1' },
+  { id: 'co2-distribution', name: 'Co2 Distribution', category: 'Category 1' },
+  { id: 'fleet-sizing', name: 'Fleet sizing', category: 'Category 1' },
+
+  { id: 'parking-rate', name: 'Parking Rate', category: 'Category 2' },
+  { id: 'border-rate', name: 'Border Rate', category: 'Category 2' },
+  { id: 'request-rate', name: 'Request rate', category: 'Category 2' },
+  { id: 'variable-1a', name: 'Variable 1', category: 'Category 2' },
+  { id: 'variable-1b', name: 'Variable 1', category: 'Category 2' },
+  { id: 'variable-1c', name: 'Variable 1', category: 'Category 2' },
+
+  { id: 'variable-3a', name: 'Variable 1', category: 'Category 3' },
+  { id: 'variable-3b', name: 'Variable 1', category: 'Category 3' },
+  { id: 'variable-3c', name: 'Variable 1', category: 'Category 3' },
+]
+
+const variableCategories = ['All', 'Category 1', 'Category 2', 'Category 3'];
+
+
 function App() {
   const [editVariablesOpen, setEditVariablesOpen] = useState(false);
   const [hoverData, setHoverData] = useState<any>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [selectedVariables, setSelectedVariables] = useState<string[]>(['co2-distribution', 'fleet-sizing']);
+  const [selectCategory, setSelectCategory] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
 
   return (
     <div className="app">
@@ -120,7 +143,7 @@ function App() {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-                
+
                 <div className="chart-x-axis">
                   <span>Apr</span>
                   <span>May</span>
@@ -179,7 +202,84 @@ function App() {
               <button onClick={() => setEditVariablesOpen(false)}>✕</button>
             </div>
             <div className="slide-over-content">
-              <p>Variable editing panel content goes here...</p>
+              <div className="search-box">
+                <input
+                  type="text"
+                  placeholder="Search variables..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+
+              <div className="variable-tag-example">
+                <h4 style={{ color: '#fff', margin: '20px 0 10px 0' }}>Variable Category 1</h4>
+
+                <button
+                  onClick={() => {
+                    if (selectedVariables.includes('carbon-1')) {
+                      setSelectedVariables(selectedVariables.filter(id => id !== 'carbon-1'));
+                    } 
+                    else {
+                      setSelectedVariables([...selectedVariables, 'carbon-1']);
+                    }
+                  }}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: selectedVariables.includes('carbon-1') ? '#9fef00' : '#666',
+                    color: selectedVariables.includes('carbon-1') ? '#000' : '#fff',
+                    border: 'none',
+                    borderRadius: '20px',
+                    margin: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Carbon 1 {selectedVariables.includes('carbon-1') ? '×' : '+'}
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (selectedVariables.includes('co2-distribution')) {
+                      setSelectedVariables(selectedVariables.filter(id => id !== 'co2-distribution'));
+                    } 
+                    else {
+                      setSelectedVariables([...selectedVariables, 'co2-distribution']);
+                    }
+                  }}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: selectedVariables.includes('co2-distribution') ? '#9fef00' : '#666',
+                    color: selectedVariables.includes('co2-distribution') ? '#000' : '#fff',
+                    border: 'none',
+                    borderRadius: '20px',
+                    margin: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Co2 Distribution {selectedVariables.includes('co2-distribution') ? '×' : '+'}
+                </button>
+
+                <button
+                  onClick={() => {
+                    if (selectedVariables.includes('fleet-sizing')) {
+                      setSelectedVariables(selectedVariables.filter(id => id !== 'fleet-sizing'));
+                    } 
+                    else {
+                      setSelectedVariables([...selectedVariables, 'fleet-sizing']);
+                    }
+                  }}
+                  style={{
+                    padding: '8px 12px',
+                    backgroundColor: selectedVariables.includes('fleet-sizing') ? '#9fef00' : '#666',
+                    color: selectedVariables.includes('fleet-sizing') ? '#000' : '#fff',
+                    border: 'none',
+                    borderRadius: '20px',
+                    margin: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Fleet sizing {selectedVariables.includes('fleet-sizing') ? '×' : '+'}
+                </button>
+              </div>
             </div>
           </div>
         </div>
