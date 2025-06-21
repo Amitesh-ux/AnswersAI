@@ -8,20 +8,21 @@ This is a take-home assessment project for AnswersAI, implementing a data visual
 
 ## Features Implemented
 
-### ✅ Completed (Time: ~1.5 hours)
+### ✅ Completed (Time: ~3 hours)
 - **Dashboard Screen**: Main layout with sidebar navigation, header, and content areas
 - **Basic UI Components**: Buttons, cards, and layout structure matching Figma designs
 - **Slide-over Panel**: Edit Variables panel that slides in from the right with backdrop overlay
+- **Interactive Line Chart**: Fully functional chart with Recharts library
+- **Hover Tooltips**: Data point hover interactions with styled tooltips
 - **Responsive Layout**: Grid-based layout for charts and KPI cards
 - **Dark Theme**: Proper color scheme matching design specifications
 - **Best Scenario Results**: Expandable cards with green accent styling
 - **KPI Cards**: Four metric cards with proper styling and layout
 
 ### 🚧 In Progress
-- Interactive line chart with hover tooltips
 - Variable selection with tag-based interface
 - Context panels with 1.5s hover delay
-- Data point hover interactions
+- State management for variable interactions
 
 ### 📋 Planned
 - Firebase Authentication setup
@@ -34,6 +35,7 @@ This is a take-home assessment project for AnswersAI, implementing a data visual
 
 - **React 18+** with TypeScript
 - **Vite** for build tooling
+- **Recharts** for interactive data visualization
 - **CSS3** for styling (custom CSS instead of Tailwind)
 - **React Hooks** for state management
 - Planned: Zustand for complex state, React Router, Firebase Auth
@@ -72,9 +74,10 @@ npm run dev
 
 - **Navigation**: Sidebar with icon-based navigation (visual only)
 - **Dashboard Layout**: Proper grid layout matching Figma designs
+- **Interactive Chart**: Line chart with hover tooltips showing data values
 - **Edit Variables**: Click "Edit Variables" button to open slide-over panel
 - **Responsive Design**: Adapts to different screen sizes
-- **Interactive Elements**: Hover states on buttons and navigation items
+- **Interactive Elements**: Hover states on buttons, navigation, and chart data points
 
 ## Technical Decisions & Trade-offs
 
@@ -83,6 +86,16 @@ npm run dev
 - **Reason**: Encountered configuration issues with Tailwind + Vite setup
 - **Trade-off**: More verbose styling code, but full control over styles
 - **Future**: Can migrate to Tailwind later if needed
+
+### Recharts Integration
+- **Decision**: Used Recharts library for chart implementation
+- **Reason**: Faster development than custom SVG, professional results, built-in interactions
+- **Trade-off**: Additional dependency vs full custom control
+- **Result**: Clean, responsive chart with minimal code
+- **Decision**: Started with everything in App.tsx
+- **Reason**: Faster development and immediate visual results
+- **Trade-off**: Less organized code structure initially
+- **Future**: Will refactor into proper component architecture
 
 ### Single Component Approach
 - **Decision**: Started with everything in App.tsx
@@ -103,30 +116,36 @@ npm run dev
 - Slide-over panel functionality
 - Styling to match Figma designs
 
+### Session 2 (0.5 hours)
+- Interactive chart implementation with Recharts
+- Hover tooltip functionality
+- Chart styling and responsive design
+- Documentation updates
+
 ## Next Steps
 
-1. **Interactive Chart**: Implement line chart with SVG and hover tooltips
-2. **Variable Selection**: Build tag-based variable selection interface
-3. **Context Panels**: Add 1.5s hover delay context information panels
-4. **State Management**: Implement Zustand for variable selection state
-5. **Authentication**: Set up Firebase authentication
-6. **Routing**: Add React Router for navigation
-7. **Code Organization**: Refactor into proper component structure
+1. **Variable Selection Interface** - Build tag-based variable selection in slide-over
+2. **Context Panels** - Add 1.5s hover delay context information panels
+3. **State Management** - Implement Zustand for variable selection state
+4. **Authentication Setup** - Set up Firebase authentication
+5. **Routing** - Add React Router for navigation
+6. **Code Organization** - Refactor into proper component structure
 
 ## Known Limitations
 
-- Chart is currently a placeholder
 - Variable selection interface not yet implemented
 - No authentication system
 - Navigation is visual only (no routing)
 - No error handling or loading states
+- Context panels not yet implemented
 
 ## Time Tracking
 
-- **Total Time Invested**: ~1.5 hours
+- **Total Time Invested**: ~2 hours
 - **Setup & Configuration**: 30 minutes
 - **Basic Layout & Styling**: 45 minutes
 - **Slide-over Implementation**: 15 minutes
+- **Interactive Chart Implementation**: 30 minutes
 
 ## Assessment Requirements Status
 
@@ -137,7 +156,7 @@ npm run dev
 
 ### Required Interactions
 - [x] Slide-Over Variable editing Card Interaction
-- [ ] Data Point Hover Interaction
+- [x] Data Point Hover Interaction
 - [ ] Variable Selection Interaction
 
 ### Technical Requirements
