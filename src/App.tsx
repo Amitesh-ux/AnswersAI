@@ -2,6 +2,10 @@ import { useState } from 'react'
 import './App.css'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import React, { useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+import { AuthProvider, useAuth } from './AuthContext';
+import { Login } from './Login';
 
 const mockData = [
   { month: 'Apr', value: 45000, date: '2024-04' },
@@ -13,28 +17,38 @@ const mockData = [
   { month: 'Oct', value: 110000, date: '2024-10' }
 ]
 
-const variables = [
-  { id: 'carbon-1', name: 'Carbon 1', category: 'Category 1' },
-  { id: 'co2-distribution', name: 'Co2 Distribution', category: 'Category 1' },
-  { id: 'fleet-sizing', name: 'Fleet sizing', category: 'Category 1' },
-
-  { id: 'parking-rate', name: 'Parking Rate', category: 'Category 2' },
-  { id: 'border-rate', name: 'Border Rate', category: 'Category 2' },
-  { id: 'request-rate', name: 'Request rate', category: 'Category 2' },
-  { id: 'variable-1a', name: 'Variable 1', category: 'Category 2' },
-  { id: 'variable-1b', name: 'Variable 1', category: 'Category 2' },
-  { id: 'variable-1c', name: 'Variable 1', category: 'Category 2' },
-
-  { id: 'variable-3a', name: 'Variable 1', category: 'Category 3' },
-  { id: 'variable-3b', name: 'Variable 1', category: 'Category 3' },
-  { id: 'variable-3c', name: 'Variable 1', category: 'Category 3' },
-]
-
-const variableCategories = ['All', 'Category 1', 'Category 2', 'Category 3'];
-
-
-
 function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
+  );
+}
+
+function AppContent() {
+  const { currentUser, logout } = useAuth();
+  
+  // If not logged in, show login screen
+  if (!currentUser) {
+    return <Login />;
+  }
+
+  return (
+    <Routes>
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/analytics" element={<div style={{color: 'white', padding: '20px'}}>Analytics Page - Coming Soon</div>} />
+      <Route path="/reports" element={<div style={{color: 'white', padding: '20px'}}>Reports Page - Coming Soon</div>} />
+      <Route path="/settings" element={<div style={{color: 'white', padding: '20px'}}>Settings Page - Coming Soon</div>} />
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
+  );
+}
+
+function Dashboard() {
+  const { currentUser, logout } = useAuth();
+  
   const [editVariablesOpen, setEditVariablesOpen] = useState(false);
   const [hoverData, setHoverData] = useState<any>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -70,6 +84,14 @@ function App() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
+
   return (
     <div className="app">
       {/* Sidebar */}
@@ -94,6 +116,26 @@ function App() {
           </div>
           <div className="header-right">
             <div className="search-bar">🔍 Search</div>
+            {/* Add logout button */}
+            <div style={{ marginLeft: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ color: '#888', fontSize: '14px' }}>
+                {currentUser?.email}
+              </span>
+              <button 
+                onClick={handleLogout}
+                style={{
+                  padding: '6px 12px',
+                  backgroundColor: '#ff4444',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '14px'
+                }}
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
 
