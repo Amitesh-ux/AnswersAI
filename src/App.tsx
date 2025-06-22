@@ -3,18 +3,19 @@ import './App.css'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import React, { useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Home, Zap, BarChart3, Settings, Wrench, Search, RefreshCw, Upload, X, Plus, ChevronDown, Info } from 'lucide-react';
 
 import { AuthProvider, useAuth } from './AuthContext';
 import { Login } from './Login';
 
 const mockData = [
-  { month: 'Apr', value: 45000, date: '2024-04' },
-  { month: 'May', value: 60000, date: '2024-05' },
-  { month: 'Jun', value: 70000, date: '2024-06' },
-  { month: 'Jul', value: 80000, date: '2024-07' },
-  { month: 'Aug', value: 90000, date: '2024-08' },
-  { month: 'Sep', value: 100000, date: '2024-09' },
-  { month: 'Oct', value: 110000, date: '2024-10' }
+  { month: 'Apr', value: 30000 },
+  { month: 'May', value: 45000 },
+  { month: 'Jun', value: 40000 },
+  { month: 'Jul', value: 80000 },
+  { month: 'Aug', value: 60000 },
+  { month: 'Sep', value: 45000 },
+  { month: 'Oct', value: 55000 }
 ]
 
 function App() {
@@ -30,7 +31,6 @@ function App() {
 function AppContent() {
   const { currentUser, logout } = useAuth();
   
-  // If not logged in, show login screen
   if (!currentUser) {
     return <Login />;
   }
@@ -50,34 +50,26 @@ function Dashboard() {
   const { currentUser, logout } = useAuth();
   
   const [editVariablesOpen, setEditVariablesOpen] = useState(false);
-  const [hoverData, setHoverData] = useState<any>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
+  const [searchTerm, setSearchTerm] = useState('Carbon');
   const [selectedVariables, setSelectedVariables] = useState<string[]>(['co2-distribution', 'fleet-sizing']);
-  const [selectCategory, setSelectCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
-
   const [hoveredVariable, setHoveredVariable] = useState<string | null>(null);
-  const [showContext, setShowContext] = useState<string | null>(null);
+  const [showContext, setShowContext] = useState<string | null>('co2-distribution');
+  const [primaryVariablesOpen, setPrimaryVariablesOpen] = useState(true);
+  const [secondaryVariablesOpen, setSecondaryVariablesOpen] = useState(true);
   const hoverTimer = useRef<NodeJS.Timeout | null>(null);
 
   const handleVariableHover = (variableId: string) => {
     setHoveredVariable(variableId);
-
-    // Clear any existing timer
     if (hoverTimer.current) {
       clearTimeout(hoverTimer.current);
     }
-
-    // Set 1.5 second timer
     hoverTimer.current = setTimeout(() => {
       setShowContext(variableId);
-    }, 1500);
+    }, 500);
   };
 
   const handleVariableLeave = () => {
     setHoveredVariable(null);
-    setShowContext(null);
     if (hoverTimer.current) {
       clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
@@ -92,46 +84,67 @@ function Dashboard() {
     }
   };
 
+  const toggleVariable = (variableId: string) => {
+    if (selectedVariables.includes(variableId)) {
+      setSelectedVariables(selectedVariables.filter(id => id !== variableId));
+    } else {
+      setSelectedVariables([...selectedVariables, variableId]);
+    }
+  };
+
   return (
-    <div className="app">
+    <div className="min-h-screen bg-[#1a1a1a] text-white flex">
       {/* Sidebar */}
-      <div className="sidebar">
-        <div className="nav-item active">🏠</div>
-        <div className="nav-item">⚡</div>
-        <div className="nav-item">📊</div>
-        <div className="nav-item">🔧</div>
-        <div className="nav-item">⚙️</div>
+      <div className="w-12 bg-[#2a2a2a] flex flex-col items-center py-4 space-y-4">
+        <button className="w-8 h-8 flex items-center justify-center text-white hover:bg-[#3a3a3a] rounded">
+          <Home size={18} />
+        </button>
+        <button className="w-8 h-8 flex items-center justify-center text-[#9fef00] bg-[#3a3a3a] rounded">
+          <Zap size={18} />
+        </button>
+        <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:bg-[#3a3a3a] rounded">
+          <BarChart3 size={18} />
+        </button>
+        <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:bg-[#3a3a3a] rounded">
+          <Wrench size={18} />
+        </button>
+        <button className="w-8 h-8 flex items-center justify-center text-gray-400 hover:bg-[#3a3a3a] rounded">
+          <Settings size={18} />
+        </button>
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
+      <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="header">
-          <div className="header-left">
-            <div className="breadcrumb">
-              <span>Charging Stations</span>
-              <span>Fleet Sizing</span>
-              <span>Parking</span>
-            </div>
+        <div className="h-14 bg-[#2a2a2a] flex items-center justify-between px-6 border-b border-[#3a3a3a]">
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-400">
+              <div className="w-4 h-3 flex flex-col justify-between">
+                <div className="w-4 h-0.5 bg-gray-400"></div>
+                <div className="w-4 h-0.5 bg-gray-400"></div>
+                <div className="w-4 h-0.5 bg-gray-400"></div>
+              </div>
+            </button>
+            <nav className="flex items-center space-x-6 text-sm">
+              <span className="text-white">Charging Stations</span>
+              <span className="text-gray-400">Fleet Sizing</span>
+              <span className="text-gray-400">Parking</span>
+            </nav>
           </div>
-          <div className="header-right">
-            <div className="search-bar">🔍 Search</div>
-            {/* Add logout button */}
-            <div style={{ marginLeft: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <span style={{ color: '#888', fontSize: '14px' }}>
-                {currentUser?.email}
-              </span>
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search"
+                className="bg-[#3a3a3a] text-white pl-10 pr-4 py-2 rounded-md w-64 text-sm border border-[#4a4a4a] focus:outline-none focus:border-[#9fef00]"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-400">{currentUser?.email}</span>
               <button 
                 onClick={handleLogout}
-                style={{
-                  padding: '6px 12px',
-                  backgroundColor: '#ff4444',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '14px'
-                }}
+                className="text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded"
               >
                 Logout
               </button>
@@ -139,69 +152,112 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Title Section */}
-        <div className="title-section">
-          <h1>⚡ Charging Station</h1>
-          <div className="title-actions">
-            <button className="btn-secondary">🔄 Refresh</button>
-            <button
-              className="btn-primary"
-              onClick={() => setEditVariablesOpen(true)}
-            >
-              Edit Variables
-            </button>
-            <button className="btn-secondary">📤</button>
+        {/* Content */}
+        <div className="flex-1 p-6">
+          {/* Title Section */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <Zap className="text-[#9fef00]" size={24} />
+              <h1 className="text-2xl font-semibold">Charging Station</h1>
+            </div>
+            <div className="flex items-center space-x-3">
+              <button className="flex items-center space-x-2 px-4 py-2 bg-[#3a3a3a] hover:bg-[#4a4a4a] rounded-md text-sm">
+                <RefreshCw size={16} />
+                <span>Refresh</span>
+              </button>
+              <button 
+                onClick={() => setEditVariablesOpen(true)}
+                className="px-4 py-2 bg-[#9fef00] hover:bg-[#8ee000] text-black rounded-md text-sm font-medium"
+              >
+                Edit Variables
+              </button>
+              <button className="p-2 bg-[#3a3a3a] hover:bg-[#4a4a4a] rounded-md">
+                <Upload size={16} />
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Best Scenario Results */}
-        <div className="scenario-results">
-          <h2>✨ Best Scenario Results</h2>
-          <div className="result-card">
-            The best found configuration based on profit is characterized by 11 zones (max) with charging stations and 48 total number of poles.
+          {/* Best Scenario Results */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-[#9fef00] rounded-full"></div>
+                <h2 className="text-lg font-medium">Best Scenario Results</h2>
+              </div>
+              <button className="text-gray-400 hover:text-white">
+                <ChevronDown size={20} />
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-4 relative">
+                <p className="text-sm text-gray-300">
+                  The best found configuration based on profit is characterized by 11 zones (max) with charging stations and 48 total number of poles.
+                </p>
+                <button className="absolute top-4 right-4 text-gray-400 hover:text-white">
+                  <div className="flex space-x-1">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                  </div>
+                </button>
+              </div>
+              
+              <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-4 relative">
+                <p className="text-sm text-gray-300">
+                  The best found configuration based on satisfied demand is characterized by 11 zones (max) with charging stations and 48 total number of poles.
+                </p>
+                <button className="absolute top-4 right-4 text-gray-400 hover:text-white">
+                  <div className="flex space-x-1">
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="result-card">
-            The best found configuration based on satisfied demand is characterized by 11 zones (max) with charging stations and 48 total number of poles.
-          </div>
-        </div>
 
-        <div className="content-grid">
-          {/* Charts Section */}
-          <div className="charts-section">
-            <h3>Graphs</h3>
-            <div className="chart-container">
-              {/* Simple chart placeholder */}
-              <div className="chart">
-                <div className="chart-y-axis">
-                  <span>$100K</span>
-                  <span>$80K</span>
-                  <span>$60K</span>
-                  <span>$40K</span>
-                  <span>$20K</span>
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Charts Section */}
+            <div className="lg:col-span-2">
+              <h3 className="text-lg font-medium mb-4">Graphs</h3>
+              <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center space-x-2">
+                    <select className="bg-[#3a3a3a] text-white border border-[#4a4a4a] rounded px-3 py-1 text-sm">
+                      <option>Unsatisfied Demand %</option>
+                    </select>
+                    <ChevronDown size={16} className="text-gray-400" />
+                  </div>
                 </div>
-                <div className="chart-area">
-                  {/* Responsive container for the chart, library suggested by Claude */}
+                
+                <div className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={mockData}>
+                    <LineChart data={mockData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                       <XAxis
                         dataKey="month"
                         axisLine={false}
                         tickLine={false}
                         tick={{ fill: '#888', fontSize: 12 }}
+                        className="text-xs"
                       />
                       <YAxis
                         axisLine={false}
                         tickLine={false}
                         tick={{ fill: '#888', fontSize: 12 }}
                         tickFormatter={(value) => `€${value / 1000}K`}
+                        domain={[20000, 100000]}
+                        ticks={[20000, 40000, 60000, 80000, 100000]}
                       />
                       <Line
                         type="monotone"
                         dataKey="value"
                         stroke="#9fef00"
                         strokeWidth={2}
-                        dot={{ fill: '#9fef00', strokeWidth: 2, r: 6 }}
-                        activeDot={{ r: 8, stroke: '#9fef00', strokeWidth: 2 }}
+                        dot={{ fill: '#9fef00', strokeWidth: 2, r: 4 }}
+                        activeDot={{ r: 6, stroke: '#9fef00', strokeWidth: 2, fill: '#9fef00' }}
                       />
                       <Tooltip
                         contentStyle={{
@@ -210,55 +266,60 @@ function Dashboard() {
                           borderRadius: '8px',
                           color: '#fff'
                         }}
-                        formatter={(value: any) => [`€${value.toLocaleString()}`, 'Revenue']}
+                        formatter={(value: any) => [`€${value.toLocaleString()}`, 'Value']}
                       />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
+              </div>
+            </div>
 
-                <div className="chart-x-axis">
-                  <span>Apr</span>
-                  <span>May</span>
-                  <span>Jun</span>
-                  <span>Jul</span>
-                  <span>Aug</span>
-                  <span>Sep</span>
-                  <span>Oct</span>
+            {/* KPI Section */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-medium">Key Performance Indicators</h3>
+                <button className="flex items-center space-x-1 text-sm text-gray-400 hover:text-white">
+                  <span>Variables</span>
+                  <Plus size={16} />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium">Infrastructure Units</h4>
+                    <Info size={14} className="text-gray-400" />
+                  </div>
+                  <div className="text-2xl font-semibold mb-2">€421.07</div>
+                  <p className="text-xs text-gray-400">This describes variable two and what the shown data means.</p>
                 </div>
-              </div>
-            </div>
-          </div>
 
-          {/* KPI Cards */}
-          <div className="kpi-section">
-            <div className="kpi-header">
-              <h3>Key Performance Indicators</h3>
-              <button>Variables +</button>
-            </div>
+                <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium">Charging Growth</h4>
+                    <Info size={14} className="text-gray-400" />
+                  </div>
+                  <div className="text-2xl font-semibold mb-2">33.07</div>
+                  <p className="text-xs text-gray-400">This describes variable two and what the shown data means.</p>
+                </div>
 
-            <div className="kpi-grid">
-              <div className="kpi-card">
-                <h4>Infrastructure Units</h4>
-                <p className="kpi-value">€421.07</p>
-                <p className="kpi-desc">This describes variable two and what the shown data means.</p>
-              </div>
+                <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium">Localization change</h4>
+                    <Info size={14} className="text-gray-400" />
+                  </div>
+                  <div className="text-2xl font-semibold mb-2">21.9%</div>
+                  <p className="text-xs text-gray-400">This describes variable two and what the shown data means.</p>
+                </div>
 
-              <div className="kpi-card">
-                <h4>Charging Growth</h4>
-                <p className="kpi-value">33.07</p>
-                <p className="kpi-desc">This describes variable two and what the shown data means.</p>
-              </div>
-
-              <div className="kpi-card">
-                <h4>Localization change</h4>
-                <p className="kpi-value">21.9%</p>
-                <p className="kpi-desc">This describes variable two and what the shown data means.</p>
-              </div>
-
-              <div className="kpi-card">
-                <h4>Fleet growth</h4>
-                <p className="kpi-value">7.03%</p>
-                <p className="kpi-desc">This describes variable two and what the shown data means.</p>
+                <div className="bg-[#2a2a2a] border border-[#3a3a3a] rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-medium">Fleet growth</h4>
+                    <Info size={14} className="text-gray-400" />
+                  </div>
+                  <div className="text-2xl font-semibold mb-2">7.03%</div>
+                  <p className="text-xs text-gray-400">This describes variable two and what the shown data means.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -267,305 +328,223 @@ function Dashboard() {
 
       {/* Edit Variables Slide-over */}
       {editVariablesOpen && (
-        <div className="slide-over-backdrop" onClick={() => setEditVariablesOpen(false)}>
-          <div className="slide-over-panel" onClick={(e) => e.stopPropagation()}>
-            <div className="slide-over-header">
-              <h2>Edit Variables</h2>
-              <button onClick={() => setEditVariablesOpen(false)}>✕</button>
+        <div className="fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setEditVariablesOpen(false)}
+          />
+          
+          {/* Slide-over Panel */}
+          <div className="absolute right-0 top-0 h-full w-96 bg-[#2a2a2a] border-l border-[#3a3a3a] shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-[#3a3a3a]">
+              <h2 className="text-lg font-semibold">Edit Variables</h2>
+              <button 
+                onClick={() => setEditVariablesOpen(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <div className="slide-over-content">
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder="Search variables..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
 
-              <div className="variable-tag-example">
-                <h4 style={{ color: '#fff', margin: '20px 0 10px 0' }}>Variable Category 1</h4>
-
-                <button
-                  onClick={() => {
-                    if (selectedVariables.includes('carbon-1')) {
-                      setSelectedVariables(selectedVariables.filter(id => id !== 'carbon-1'));
-                    }
-                    else {
-                      setSelectedVariables([...selectedVariables, 'carbon-1']);
-                    }
-                  }}
-
-                  onMouseEnter={() => handleVariableHover('carbon-1')}
-                  onMouseLeave={handleVariableLeave}
-
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: selectedVariables.includes('carbon-1') ? '#9fef00' : '#666',
-                    color: selectedVariables.includes('carbon-1') ? '#000' : '#fff',
-                    border: 'none',
-                    borderRadius: '20px',
-                    margin: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Carbon 1 {selectedVariables.includes('carbon-1') ? '×' : '+'}
-                </button>
-
-                <button
-                  onClick={() => {
-                    if (selectedVariables.includes('co2-distribution')) {
-                      setSelectedVariables(selectedVariables.filter(id => id !== 'co2-distribution'));
-                    }
-                    else {
-                      setSelectedVariables([...selectedVariables, 'co2-distribution']);
-                    }
-                  }}
-
-                  onMouseEnter={() => handleVariableHover('co2-distribution')}
-                  onMouseLeave={handleVariableLeave}
-
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: selectedVariables.includes('co2-distribution') ? '#9fef00' : '#666',
-                    color: selectedVariables.includes('co2-distribution') ? '#000' : '#fff',
-                    border: 'none',
-                    borderRadius: '20px',
-                    margin: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Co2 Distribution {selectedVariables.includes('co2-distribution') ? '×' : '+'}
-                </button>
-
-                <button
-                  onClick={() => {
-                    if (selectedVariables.includes('fleet-sizing')) {
-                      setSelectedVariables(selectedVariables.filter(id => id !== 'fleet-sizing'));
-                    }
-                    else {
-                      setSelectedVariables([...selectedVariables, 'fleet-sizing']);
-                    }
-                  }}
-
-                  onMouseEnter={() => handleVariableHover('fleet-sizing')}
-                  onMouseLeave={handleVariableLeave}
-
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: selectedVariables.includes('fleet-sizing') ? '#9fef00' : '#666',
-                    color: selectedVariables.includes('fleet-sizing') ? '#000' : '#fff',
-                    border: 'none',
-                    borderRadius: '20px',
-                    margin: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Fleet sizing {selectedVariables.includes('fleet-sizing') ? '×' : '+'}
-                </button>
-              </div>
-
-              <div className="variable-tag-example">
-                <h4 style={{ color: '#fff', margin: '20px 0 10px 0' }}>Variable Category 2</h4>
-
-                <button
-                  onClick={() => {
-                    if (selectedVariables.includes('energy-consumption')) {
-                      setSelectedVariables(selectedVariables.filter(id => id !== 'energy-consumption'));
-                    } else {
-                      setSelectedVariables([...selectedVariables, 'energy-consumption']);
-                    }
-                  }}
-                  onMouseEnter={() => handleVariableHover('energy-consumption')}
-                  onMouseLeave={handleVariableLeave}
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: selectedVariables.includes('energy-consumption') ? '#9fef00' : '#666',
-                    color: selectedVariables.includes('energy-consumption') ? '#000' : '#fff',
-                    border: 'none',
-                    borderRadius: '20px',
-                    margin: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Energy Consumption {selectedVariables.includes('energy-consumption') ? '×' : '+'}
-                </button>
-
-                <button
-                  onClick={() => {
-                    if (selectedVariables.includes('peak-demand')) {
-                      setSelectedVariables(selectedVariables.filter(id => id !== 'peak-demand'));
-                    } else {
-                      setSelectedVariables([...selectedVariables, 'peak-demand']);
-                    }
-                  }}
-                  onMouseEnter={() => handleVariableHover('peak-demand')}
-                  onMouseLeave={handleVariableLeave}
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: selectedVariables.includes('peak-demand') ? '#9fef00' : '#666',
-                    color: selectedVariables.includes('peak-demand') ? '#000' : '#fff',
-                    border: 'none',
-                    borderRadius: '20px',
-                    margin: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Peak Demand {selectedVariables.includes('peak-demand') ? '×' : '+'}
-                </button>
-              </div>
-
-              <div className="variable-tag-example">
-                <h4 style={{ color: '#fff', margin: '20px 0 10px 0' }}>Variable Category 3</h4>
-
-                <button
-                  onClick={() => {
-                    if (selectedVariables.includes('utilization-rate')) {
-                      setSelectedVariables(selectedVariables.filter(id => id !== 'utilization-rate'));
-                    } else {
-                      setSelectedVariables([...selectedVariables, 'utilization-rate']);
-                    }
-                  }}
-                  onMouseEnter={() => handleVariableHover('utilization-rate')}
-                  onMouseLeave={handleVariableLeave}
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: selectedVariables.includes('utilization-rate') ? '#9fef00' : '#666',
-                    color: selectedVariables.includes('utilization-rate') ? '#000' : '#fff',
-                    border: 'none',
-                    borderRadius: '20px',
-                    margin: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Utilization Rate {selectedVariables.includes('utilization-rate') ? '×' : '+'}
-                </button>
-              </div>
-
-              {/* Context Panel */}
-              {showContext === 'carbon-1' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '300px',
-                  left: '20px',
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '250px',
-                  zIndex: 1000,
-                  color: '#fff'
-                }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Carbon 1</h4>
-                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
-                    Carbon tracking variable that monitors CO2 emissions across the charging network.
-                    Essential for environmental impact analysis and sustainability reporting.
-                  </p>
+            {/* Content */}
+            <div className="p-6 h-full overflow-y-auto">
+              {/* Search and Action Buttons */}
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="relative flex-1">
+                  <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search variables..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-[#3a3a3a] text-white pl-10 pr-4 py-2 rounded-md text-sm border border-[#4a4a4a] focus:outline-none focus:border-[#9fef00]"
+                  />
                 </div>
-              )}
+                <button className="px-3 py-2 bg-[#3a3a3a] hover:bg-[#4a4a4a] text-white rounded-md text-sm border border-[#4a4a4a]">
+                  AutoFill
+                </button>
+                <button className="px-3 py-2 bg-[#9fef00] hover:bg-[#8ee000] text-black rounded-md text-sm font-medium">
+                  Rerun
+                </button>
+              </div>
 
+              {/* Variable Categories */}
+              <div className="space-y-6 mb-6">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-300 mb-3">Variable category 1</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => toggleVariable('carbon-1')}
+                      onMouseEnter={() => handleVariableHover('carbon-1')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('carbon-1')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Carbon 1</span>
+                      <span>{selectedVariables.includes('carbon-1') ? '×' : '+'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => toggleVariable('co2-distribution')}
+                      onMouseEnter={() => handleVariableHover('co2-distribution')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('co2-distribution')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Co2 Distribution</span>
+                      <span>{selectedVariables.includes('co2-distribution') ? '×' : '+'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => toggleVariable('fleet-sizing')}
+                      onMouseEnter={() => handleVariableHover('fleet-sizing')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('fleet-sizing')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Fleet sizing</span>
+                      <span>{selectedVariables.includes('fleet-sizing') ? '×' : '+'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium text-gray-300 mb-3">Variable Category 2</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => toggleVariable('parking-rate')}
+                      onMouseEnter={() => handleVariableHover('parking-rate')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('parking-rate')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Parking Rate</span>
+                      <span>{selectedVariables.includes('parking-rate') ? '×' : '+'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => toggleVariable('border-rate')}
+                      onMouseEnter={() => handleVariableHover('border-rate')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('border-rate')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Border Rate</span>
+                      <span>{selectedVariables.includes('border-rate') ? '×' : '+'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => toggleVariable('request-rate')}
+                      onMouseEnter={() => handleVariableHover('request-rate')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('request-rate')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Request rate</span>
+                      <span>{selectedVariables.includes('request-rate') ? '×' : '+'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium text-gray-300 mb-3">Variable Category 3</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => toggleVariable('variable-3a')}
+                      onMouseEnter={() => handleVariableHover('variable-3a')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('variable-3a')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Variable 1</span>
+                      <span>{selectedVariables.includes('variable-3a') ? '×' : '+'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => toggleVariable('variable-3b')}
+                      onMouseEnter={() => handleVariableHover('variable-3b')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('variable-3b')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Variable 1</span>
+                      <span>{selectedVariables.includes('variable-3b') ? '×' : '+'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => toggleVariable('variable-3c')}
+                      onMouseEnter={() => handleVariableHover('variable-3c')}
+                      onMouseLeave={handleVariableLeave}
+                      className={`flex items-center space-x-2 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        selectedVariables.includes('variable-3c')
+                          ? 'bg-[#9fef00] text-black border-[#9fef00]'
+                          : 'bg-[#3a3a3a] text-white border-[#4a4a4a] hover:border-[#9fef00]'
+                      }`}
+                    >
+                      <span>Variable 1</span>
+                      <span>{selectedVariables.includes('variable-3c') ? '×' : '+'}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Variable Details */}
               {showContext === 'co2-distribution' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '300px',
-                  left: '20px',
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '250px',
-                  zIndex: 1000,
-                  color: '#fff'
-                }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Co2 Distribution</h4>
-                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
-                    But what truly sets Switch apart is its versatility. It can be used as a scooter, a
-                    bike, or even a skateboard, making it suitable for people of all ages.
+                <div className="bg-[#3a3a3a] border border-[#4a4a4a] rounded-lg p-4 mb-4">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <h4 className="font-medium">Co2 Distribution</h4>
+                    <Info size={14} className="text-gray-400" />
+                  </div>
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    But what truly sets Switch apart is its versatility. It can be used as a scooter, a bike, or even a skateboard, making it suitable for people of all ages. Whether you're a student, a professional, or a senior citizen, Switch adapts to your needs and lifestyle.
                   </p>
                 </div>
               )}
 
-              {showContext === 'fleet-sizing' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '300px',
-                  left: '20px',
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '250px',
-                  zIndex: 1000,
-                  color: '#fff'
-                }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Fleet Sizing</h4>
-                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
-                    Optimization variable for determining optimal fleet size based on demand patterns,
-                    charging capacity, and operational efficiency metrics.
-                  </p>
-                </div>
-              )}
+              {/* Collapsible Sections */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => setPrimaryVariablesOpen(!primaryVariablesOpen)}
+                  className="w-full flex items-center justify-between bg-[#3a3a3a] hover:bg-[#4a4a4a] px-4 py-3 rounded-lg text-sm font-medium"
+                >
+                  <span>Primary Variables</span>
+                  <ChevronDown size={16} className={`transform transition-transform ${primaryVariablesOpen ? 'rotate-180' : ''}`} />
+                </button>
 
-              {showContext === 'energy-consumption' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '300px',
-                  left: '20px',
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '250px',
-                  zIndex: 1000,
-                  color: '#fff'
-                }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Energy Consumption</h4>
-                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
-                    Real-time energy consumption tracking across all charging stations for optimization.
-                  </p>
-                </div>
-              )}
-
-              {showContext === 'peak-demand' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '300px',
-                  left: '20px',
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '250px',
-                  zIndex: 1000,
-                  color: '#fff'
-                }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Peak Demand</h4>
-                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
-                    Peak demand analysis for capacity planning and load balancing optimization.
-                  </p>
-                </div>
-              )}
-
-              {showContext === 'utilization-rate' && (
-                <div style={{
-                  position: 'absolute',
-                  top: '300px',
-                  left: '20px',
-                  backgroundColor: '#333',
-                  border: '1px solid #555',
-                  borderRadius: '8px',
-                  padding: '15px',
-                  width: '250px',
-                  zIndex: 1000,
-                  color: '#fff'
-                }}>
-                  <h4 style={{ margin: '0 0 10px 0', color: '#9fef00' }}>Utilization Rate</h4>
-                  <p style={{ margin: 0, fontSize: '14px', lineHeight: '1.4' }}>
-                    Station utilization metrics for efficiency analysis and resource allocation.
-                  </p>
-                </div>
-              )}
-
+                <button
+                  onClick={() => setSecondaryVariablesOpen(!secondaryVariablesOpen)}
+                  className="w-full flex items-center justify-between bg-[#3a3a3a] hover:bg-[#4a4a4a] px-4 py-3 rounded-lg text-sm font-medium"
+                >
+                  <span>Secondary Variables</span>
+                  <ChevronDown size={16} className={`transform transition-transform ${secondaryVariablesOpen ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
