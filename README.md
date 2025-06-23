@@ -1,4 +1,5 @@
 # AnswersAI Data Visualization Platform
+# Developer - Amitesh Schar
 
 A data visualization dashboard built for the AnswersAI take-home assessment. Implements three key screens with interactive behaviors as specified in the provided Figma designs.
 
@@ -32,24 +33,44 @@ cd AnswersAI/data-viz-platform
 npm install
 ```
 
-2. **Environment Variables**: Create a Firebase project and enable Authentication (Google + Email/Password providers)
+2. **Environment Variables Setup**
 
-3. Add your Firebase configuration to `src/firebase-config.js`:
-```javascript
-export const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  // ... other config
-};
-```
+   This project requires Firebase configuration for authentication.
 
-4. Start the development server:
+   ### Create Firebase Project
+   - Go to [console.firebase.google.com](https://console.firebase.google.com)
+   - Create a new project
+   - Enable Authentication with:
+     - Google OAuth provider
+     - Email/Password provider
+
+   ### Get Your Firebase Configuration
+   1. Go to Firebase Console → Project Settings → General tab
+   2. Scroll to "Your apps" section  
+   3. Click "Config" radio button to see your configuration object
+   4. Copy the values into your `firebase-config.js` file
+
+   ### Add Configuration File
+   Create `src/firebase-config.js` with your Firebase configuration:
+   ```javascript
+   export const firebaseConfig = {
+     apiKey: "your-api-key-here",
+     authDomain: "your-project-id.firebaseapp.com", 
+     projectId: "your-project-id",
+     storageBucket: "your-project-id.appspot.com",
+     messagingSenderId: "your-sender-id",
+     appId: "your-app-id"
+   };
+   ```
+
+   **Note**: No `.env` file is needed as Firebase config can be safely exposed in client-side code.
+
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
-5. Open [http://localhost:5173](http://localhost:5173) in your browser
+4. Open [http://localhost:5173](http://localhost:5173) in your browser
 
 ## Project Structure
 
