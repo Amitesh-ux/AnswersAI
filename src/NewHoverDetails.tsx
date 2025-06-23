@@ -24,14 +24,14 @@ export function NewHoverDetails({ active, payload, label }: NewHoverDetailsProps
   // Extract data from the first payload item (single line chart)
   const data = payload[0].payload;
   const value = payload[0].value;
-  
+
   // Target value for performance comparison (could be made dynamic)
   const target = 55000; // Example target value in Euros
-  
+
   // Calculate percentage difference from target
   const percentageDiff = ((value - target) / target * 100);
   const isAboveTarget = value > target;
-  
+
   /**
    * Generate contextual insights based on month and value
    * Provides specific insights for each month with realistic performance metrics
@@ -46,7 +46,7 @@ export function NewHoverDetails({ active, payload, label }: NewHoverDetailsProps
     if (month === 'Apr') return '32.1% below target';
     if (month === 'Sep') return '15.8% below target';
     if (month === 'Oct') return '2.3% above target';
-    
+
     // Fallback calculation for any unlisted months
     return `${Math.abs(percentageDiff).toFixed(1)}% ${isAboveTarget ? 'above' : 'below'} target`;
   };
@@ -61,20 +61,20 @@ export function NewHoverDetails({ active, payload, label }: NewHoverDetailsProps
       <div className="tooltip-header">
         <span className="tooltip-month">{label}</span>
       </div>
-      
+
       {/* Tooltip Content - Shows value and performance insight */}
       <div className="tooltip-content">
         {/* Formatted value display */}
         <div className="tooltip-value">
           Value: €{value.toLocaleString()}
         </div>
-        
+
         {/* Performance insight with conditional styling */}
         <div className={`tooltip-insight ${isPositive ? 'positive' : 'negative'}`}>
           {insight}
         </div>
       </div>
-      
+
       {/* Arrow element for tooltip pointer (styled via CSS) */}
       <div className="tooltip-arrow"></div>
     </div>

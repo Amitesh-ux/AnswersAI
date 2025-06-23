@@ -42,7 +42,7 @@ function App() {
  */
 function AppContent() {
   const { currentUser } = useAuth();
-  
+
   // If no user is authenticated, show login screen
   if (!currentUser) {
     return <Login />;
@@ -52,9 +52,9 @@ function AppContent() {
   return (
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/analytics" element={<div style={{color: 'white', padding: '20px'}}>Analytics Page - Coming Soon</div>} />
-      <Route path="/reports" element={<div style={{color: 'white', padding: '20px'}}>Reports Page - Coming Soon</div>} />
-      <Route path="/settings" element={<div style={{color: 'white', padding: '20px'}}>Settings Page - Coming Soon</div>} />
+      <Route path="/analytics" element={<div style={{ color: 'white', padding: '20px' }}>Analytics Page - Coming Soon</div>} />
+      <Route path="/reports" element={<div style={{ color: 'white', padding: '20px' }}>Reports Page - Coming Soon</div>} />
+      <Route path="/settings" element={<div style={{ color: 'white', padding: '20px' }}>Settings Page - Coming Soon</div>} />
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
@@ -66,14 +66,14 @@ function AppContent() {
  */
 function Dashboard() {
   const { currentUser, logout } = useAuth();
-  
+
   // State management for UI interactions
   const [editVariablesOpen, setEditVariablesOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('Carbon');
   const [selectedVariables, setSelectedVariables] = useState<string[]>(['co2-distribution', 'fleet-sizing']);
   const [hoveredVariable, setHoveredVariable] = useState<string | null>(null);
   const [showContext, setShowContext] = useState<string | null>(null);
-  
+
   // Timer ref for implementing hover delay on variable context panels
   // Note: Claude AI assisted with this hover delay implementation pattern
   const hoverTimer = useRef<NodeJS.Timeout | null>(null);
@@ -166,7 +166,7 @@ function Dashboard() {
           </div>
           <div className="search-container">
             {/* Search input with icon */}
-            <div style={{position: 'relative'}}>
+            <div style={{ position: 'relative' }}>
               <Search size={16} className="search-icon" />
               <input
                 type="text"
@@ -175,11 +175,11 @@ function Dashboard() {
               />
             </div>
             {/* User info and logout button */}
-            <div style={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-              <span style={{fontSize: '12px', color: '#888'}}>{currentUser?.email}</span>
-              <button 
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '12px', color: '#888' }}>{currentUser?.email}</span>
+              <button
                 onClick={handleLogout}
-                style={{fontSize: '12px', backgroundColor: '#dc2626', padding: '4px 8px', borderRadius: '4px', border: 'none', color: 'white', cursor: 'pointer'}}
+                style={{ fontSize: '12px', backgroundColor: '#dc2626', padding: '4px 8px', borderRadius: '4px', border: 'none', color: 'white', cursor: 'pointer' }}
               >
                 Logout
               </button>
@@ -202,14 +202,14 @@ function Dashboard() {
                 <span>Refresh</span>
               </button>
               {/* Edit Variables button - opens slide-over panel */}
-              <button 
+              <button
                 onClick={() => setEditVariablesOpen(true)}
                 className="btn-primary"
               >
                 Edit Variables
               </button>
               {/* Upload button */}
-              <button className="btn-secondary" style={{padding: '8px'}}>
+              <button className="btn-secondary" style={{ padding: '8px' }}>
                 <Upload size={16} />
               </button>
             </div>
@@ -222,14 +222,14 @@ function Dashboard() {
                 <div className="green-dot"></div>
                 <h2 className="text-accent">Best Scenario Results</h2>
               </div>
-              <ChevronDown size={20} className="text-muted" style={{cursor: 'pointer'}} />
+              <ChevronDown size={20} className="text-muted" style={{ cursor: 'pointer' }} />
             </div>
-            
+
             {/* Result cards with green styling and ellipsis dots */}
             <div className="result-card">
               The best found configuration based on profit is characterized by 11 zones (max) with charging stations and 48 total number of poles.
             </div>
-            
+
             <div className="result-card">
               The best found configuration based on satisfied demand is characterized by 11 zones (max) with charging stations and 48 total number of poles.
             </div>
@@ -246,10 +246,10 @@ function Dashboard() {
                     <option>Unsatisfied Demand %</option>
                   </select>
                 </div>
-                
+
                 {/* Interactive Line Chart with Custom Tooltips */}
                 {/* Note: Claude AI assisted with chart configuration and tooltip integration */}
-                <div style={{height: '320px'}}>
+                <div style={{ height: '320px' }}>
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={mockData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                       {/* X-axis configuration */}
@@ -288,7 +288,7 @@ function Dashboard() {
             <div className="kpi-section">
               <div className="kpi-header">
                 <h3 className="section-title">Key Performance Indicators</h3>
-                <button style={{display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#888', background: 'none', border: 'none', cursor: 'pointer'}}>
+                <button style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#888', background: 'none', border: 'none', cursor: 'pointer' }}>
                   <span>Variables</span>
                   <Plus size={16} />
                 </button>
@@ -358,20 +358,20 @@ function Dashboard() {
             <div className="slide-over-content">
               {/* Search and Action Buttons */}
               <div className="search-actions">
-                <div style={{position: 'relative', flex: 1}}>
-                  <Search size={16} style={{position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#888'}} />
+                <div style={{ position: 'relative', flex: 1 }}>
+                  <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#888' }} />
                   <input
                     type="text"
                     placeholder="Search variables..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{width: '100%'}}
+                    style={{ width: '100%' }}
                   />
                 </div>
-                <button className="btn-secondary" style={{padding: '8px 12px'}}>
+                <button className="btn-secondary" style={{ padding: '8px 12px' }}>
                   AutoFill
                 </button>
-                <button className="btn-primary" style={{padding: '8px 12px'}}>
+                <button className="btn-primary" style={{ padding: '8px 12px' }}>
                   Rerun
                 </button>
               </div>
@@ -497,37 +497,37 @@ function Dashboard() {
               {showContext && (
                 <div className="context-panel">
                   <div className="context-title">
-                    <h4>{showContext === 'co2-distribution' ? 'Co2 Distribution' : 
-                         showContext === 'carbon-1' ? 'Carbon 1' :
-                         showContext === 'fleet-sizing' ? 'Fleet Sizing' :
-                         showContext === 'parking-rate' ? 'Parking Rate' :
-                         showContext === 'border-rate' ? 'Border Rate' :
-                         showContext === 'request-rate' ? 'Request Rate' :
-                         'Variable Details'}</h4>
+                    <h4>{showContext === 'co2-distribution' ? 'Co2 Distribution' :
+                      showContext === 'carbon-1' ? 'Carbon 1' :
+                        showContext === 'fleet-sizing' ? 'Fleet Sizing' :
+                          showContext === 'parking-rate' ? 'Parking Rate' :
+                            showContext === 'border-rate' ? 'Border Rate' :
+                              showContext === 'request-rate' ? 'Request Rate' :
+                                'Variable Details'}</h4>
                     <Info size={14} className="text-muted" />
                   </div>
                   <p className="context-text">
                     {/* Dynamic context text based on selected variable */}
-                    {showContext === 'co2-distribution' ? 
+                    {showContext === 'co2-distribution' ?
                       'But what truly sets Switch apart is its versatility. It can be used as a scooter, a bike, or even a skateboard, making it suitable for people of all ages. Whether you\'re a student, a professional, or a senior citizen, Switch adapts to your needs and lifestyle.' :
-                     showContext === 'carbon-1' ?
-                      'Carbon tracking variable that monitors CO2 emissions across the charging network. Essential for environmental impact analysis and sustainability reporting.' :
-                     showContext === 'fleet-sizing' ?
-                      'Optimization variable for determining optimal fleet size based on demand patterns, charging capacity, and operational efficiency metrics.' :
-                     showContext === 'parking-rate' ?
-                      'Parking utilization metrics for understanding demand patterns and optimizing station placement.' :
-                     showContext === 'border-rate' ?
-                      'Cross-border charging analysis for regional expansion planning and market penetration strategies.' :
-                     showContext === 'request-rate' ?
-                      'Real-time request processing metrics for system performance optimization and capacity planning.' :
-                     'Detailed information about this variable and its impact on the charging station optimization model.'
+                      showContext === 'carbon-1' ?
+                        'Carbon tracking variable that monitors CO2 emissions across the charging network. Essential for environmental impact analysis and sustainability reporting.' :
+                        showContext === 'fleet-sizing' ?
+                          'Optimization variable for determining optimal fleet size based on demand patterns, charging capacity, and operational efficiency metrics.' :
+                          showContext === 'parking-rate' ?
+                            'Parking utilization metrics for understanding demand patterns and optimizing station placement.' :
+                            showContext === 'border-rate' ?
+                              'Cross-border charging analysis for regional expansion planning and market penetration strategies.' :
+                              showContext === 'request-rate' ?
+                                'Real-time request processing metrics for system performance optimization and capacity planning.' :
+                                'Detailed information about this variable and its impact on the charging station optimization model.'
                     }
                   </p>
                 </div>
               )}
 
               {/* Collapsible Sections */}
-              <div style={{display: 'flex', flexDirection: 'column', gap: '12px'}}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <button className="collapsible-section">
                   <span>Primary Variables</span>
                   <ChevronDown size={16} />

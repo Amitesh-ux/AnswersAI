@@ -13,7 +13,7 @@ export function Login() {
   const [isSignUp, setIsSignUp] = useState(false);  // Toggle between login and signup modes
   const [error, setError] = useState('');           // Error message display
   const [loading, setLoading] = useState(false);    // Loading state for form submission
-  
+
   // Extract authentication functions from context
   const { login, signup, loginWithGoogle } = useAuth();
 
@@ -34,7 +34,7 @@ export function Login() {
       // Clear any previous errors
       setError('');
       setLoading(true);
-      
+
       // Call appropriate auth function based on current mode
       if (isSignUp) {
         await signup(email, password);
@@ -81,15 +81,15 @@ export function Login() {
         maxWidth: '90vw'
       }}>
         {/* Dynamic title based on current mode */}
-        <h2 style={{ 
-          color: '#fff', 
-          textAlign: 'center', 
+        <h2 style={{
+          color: '#fff',
+          textAlign: 'center',
           marginBottom: '30px',
           fontSize: '24px'
         }}>
           {isSignUp ? 'Create Account' : 'Sign In'}
         </h2>
-        
+
         {/* Error Message Display */}
         {error && (
           <div style={{
@@ -126,7 +126,7 @@ export function Login() {
               }}
             />
           </div>
-          
+
           {/* Password Input Field */}
           <div style={{ marginBottom: '20px' }}>
             <input

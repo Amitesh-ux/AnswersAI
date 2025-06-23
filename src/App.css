@@ -1,49 +1,66 @@
+/* Import Inter font family for modern, clean typography */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Reset and base styles */
+/* ===== RESET AND BASE STYLES ===== */
+/* Global reset to ensure consistent styling across browsers */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Base body styling with dark theme and Inter font stack */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Smooth font rendering on macOS */
   -moz-osx-font-smoothing: grayscale;
+  /* Smooth font rendering on Firefox */
   background-color: #1a1a1a;
+  /* Dark background */
   color: white;
+  /* Default white text */
   margin: 0;
   padding: 0;
 }
 
+/* Root container takes full viewport */
 #root {
   width: 100vw;
   height: 100vh;
 }
 
-/* Main app container */
+/* ===== MAIN APP LAYOUT ===== */
+/* Main app container using flexbox for sidebar + main content layout */
 .app {
   min-height: 100vh;
   background-color: #1a1a1a;
   color: white;
   display: flex;
+  /* Horizontal layout: sidebar | main content */
   font-family: 'Inter', sans-serif;
 }
 
-/* Sidebar */
+/* ===== SIDEBAR NAVIGATION ===== */
+/* Left sidebar with navigation icons - fixed width, vertical layout */
 .sidebar {
   width: 48px;
+  /* Fixed narrow width */
   background-color: #2a2a2a;
+  /* Slightly lighter than main background */
   display: flex;
   flex-direction: column;
+  /* Stack nav items vertically */
   align-items: center;
   padding: 16px 0;
   gap: 16px;
+  /* Space between nav items */
   border-right: 1px solid #3a3a3a;
+  /* Subtle border separator */
 }
 
+/* Individual navigation item styling */
 .nav-item {
   width: 32px;
   height: 32px;
@@ -53,53 +70,71 @@ body {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.2s;
+  /* Smooth hover transition */
   color: #888;
+  /* Muted gray for inactive items */
 }
 
+/* Hover state for nav items */
 .nav-item:hover {
   background-color: #3a3a3a;
 }
 
+/* Active state for current nav item */
 .nav-item.active {
   background-color: #3a3a3a;
   color: #9fef00;
+  /* Brand green color */
 }
 
-/* Main content */
+/* ===== MAIN CONTENT AREA ===== */
+/* Main content container - takes remaining space after sidebar */
 .main-content {
   flex: 1;
+  /* Take all remaining horizontal space */
   display: flex;
   flex-direction: column;
+  /* Vertical layout: header | content */
   max-height: 100vh;
   overflow: hidden;
+  /* Prevent overall page scroll */
 }
 
-/* Header */
+/* ===== HEADER SECTION ===== */
+/* Top header bar with breadcrumb and user controls */
 .header {
   height: 56px;
+  /* Fixed header height */
   background-color: #2a2a2a;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Breadcrumb left, search/user right */
   padding: 0 24px;
   border-bottom: 1px solid #3a3a3a;
+  /* Separator line */
 }
 
+/* Breadcrumb navigation styling */
 .breadcrumb {
   display: flex;
   align-items: center;
   gap: 24px;
+  /* Space between breadcrumb items */
   font-size: 14px;
 }
 
+/* First breadcrumb item (current page) - white text */
 .breadcrumb span:first-child {
   color: white;
 }
 
+/* Subsequent breadcrumb items - muted gray */
 .breadcrumb span:not(:first-child) {
   color: #888;
 }
 
+/* Search container with input and user info */
 .search-container {
   position: relative;
   display: flex;
@@ -107,67 +142,87 @@ body {
   gap: 16px;
 }
 
+/* Search input field with left padding for icon */
 .search-input {
   background-color: #3a3a3a;
   color: white;
   padding: 8px 12px 8px 40px;
+  /* Extra left padding for search icon */
   border-radius: 6px;
   border: 1px solid #4a4a4a;
   width: 256px;
   font-size: 14px;
 }
 
+/* Focus state for search input - green border */
 .search-input:focus {
   outline: none;
   border-color: #9fef00;
+  /* Brand green focus color */
 }
 
+/* Search icon positioned absolutely inside input */
 .search-icon {
   position: absolute;
   left: 12px;
   color: #888;
   pointer-events: none;
+  /* Don't interfere with input clicks */
 }
 
-/* Content */
+/* ===== MAIN CONTENT AREA ===== */
+/* Scrollable content area below header */
 .content {
   flex: 1;
+  /* Take remaining vertical space */
   padding: 24px;
   background-color: #1a1a1a;
   overflow-y: auto;
+  /* Allow scrolling for long content */
   max-height: calc(100vh - 56px);
+  /* Account for header height */
 }
 
-/* Title section */
+/* ===== TITLE SECTION ===== */
+/* Page title with action buttons */
 .title-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* Title left, actions right */
   margin-bottom: 24px;
 }
 
+/* Title container with icon and text */
 .title {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* Space between icon and text */
 }
 
+/* Main page title styling */
 .title h1 {
   font-size: 24px;
   font-weight: 600;
   margin: 0;
 }
 
+/* Action buttons container */
 .title-actions {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* Space between buttons */
 }
 
+/* ===== BUTTON STYLES ===== */
+/* Secondary button styling (gray background) */
 .btn-secondary {
   display: flex;
   align-items: center;
   gap: 8px;
+  /* Space between icon and text */
   padding: 8px 16px;
   background-color: #3a3a3a;
   color: white;
@@ -176,16 +231,21 @@ body {
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.2s;
+  /* Smooth hover transition */
 }
 
+/* Secondary button hover state */
 .btn-secondary:hover {
   background-color: #4a4a4a;
 }
 
+/* Primary button styling (brand green background) */
 .btn-primary {
   padding: 8px 16px;
   background-color: #9fef00;
+  /* Brand green */
   color: black;
+  /* Black text for contrast */
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -194,15 +254,19 @@ body {
   transition: background-color 0.2s;
 }
 
+/* Primary button hover state */
 .btn-primary:hover {
   background-color: #8ee000;
+  /* Slightly darker green */
 }
 
-/* Scenario results */
+/* ===== SCENARIO RESULTS SECTION ===== */
+/* Best scenario results section */
 .scenario-results {
   margin-bottom: 32px;
 }
 
+/* Header for scenario results with title and chevron */
 .scenario-header {
   display: flex;
   align-items: center;
@@ -210,70 +274,90 @@ body {
   margin-bottom: 16px;
 }
 
+/* Scenario title with green dot indicator */
 .scenario-title {
   display: flex;
   align-items: center;
   gap: 8px;
+  /* Space between dot and text */
   font-size: 18px;
   font-weight: 500;
   margin: 0;
 }
 
+/* Green status indicator dot */
 .green-dot {
   width: 8px;
   height: 8px;
   background-color: #9fef00;
+  /* Brand green */
   border-radius: 50%;
+  /* Perfect circle */
 }
 
+/* Individual result cards with green theme */
+/* Note: Claude AI assisted with the card styling and positioned ellipsis implementation */
 .result-card {
   background-color: rgba(159, 239, 0, 0.1);
+  /* Subtle green background */
   border: 1px solid #9fef00;
+  /* Green border */
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 12px;
   position: relative;
+  /* For absolute positioned ellipsis */
   font-size: 14px;
   color: #ccc;
   line-height: 1.5;
-  padding-right: 40px; /* Make room for the dots */
+  padding-right: 40px;
+  /* Make room for ellipsis dots */
 }
 
+/* Ellipsis dots using CSS pseudo-element */
 .result-card::after {
-  content: "⋯"; /* Using the actual ellipsis character */
+  content: "⋯";
+  /* Unicode ellipsis character */
   position: absolute;
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
+  /* Perfect vertical centering */
   color: #888;
   font-size: 16px;
   cursor: pointer;
 }
 
-/* Content grid */
+/* ===== CONTENT GRID LAYOUT ===== */
+/* Two-column grid for charts and KPIs */
 .content-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
+  /* Charts take 2/3, KPIs take 1/3 */
   gap: 24px;
 }
 
+/* Responsive: single column on smaller screens */
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
   }
 }
 
-/* Charts section */
+/* ===== CHARTS SECTION ===== */
+/* Charts section styling */
 .charts-section {
   margin-bottom: 16px;
 }
 
+/* Section title styling */
 .section-title {
   font-size: 18px;
   font-weight: 500;
   margin-bottom: 16px;
 }
 
+/* Chart container with dark background */
 .chart-container {
   background-color: #2a2a2a;
   border: 1px solid #3a3a3a;
@@ -281,6 +365,7 @@ body {
   padding: 24px;
 }
 
+/* Chart header with dropdown selector */
 .chart-header {
   display: flex;
   justify-content: space-between;
@@ -288,6 +373,7 @@ body {
   margin-bottom: 16px;
 }
 
+/* Dropdown select styling */
 .select {
   background-color: #3a3a3a;
   color: white;
@@ -297,25 +383,30 @@ body {
   font-size: 14px;
 }
 
-/* KPI section */
+/* ===== KPI SECTION ===== */
+/* Key Performance Indicators section */
 .kpi-section {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+/* KPI section header with title and add button */
 .kpi-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+/* Grid of KPI cards */
 .kpi-grid {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  /* Space between KPI cards */
 }
 
+/* Individual KPI card styling */
 .kpi-card {
   background-color: #2a2a2a;
   border: 1px solid #3a3a3a;
@@ -323,6 +414,7 @@ body {
   padding: 16px;
 }
 
+/* KPI card header with title and info icon */
 .kpi-card-header {
   display: flex;
   align-items: center;
@@ -330,12 +422,14 @@ body {
   margin-bottom: 8px;
 }
 
+/* KPI card title */
 .kpi-card-title {
   font-size: 14px;
   font-weight: 500;
   margin: 0;
 }
 
+/* Large KPI value display */
 .kpi-value {
   font-size: 24px;
   font-weight: 600;
@@ -343,6 +437,7 @@ body {
   color: white;
 }
 
+/* KPI description text */
 .kpi-desc {
   font-size: 12px;
   color: #888;
@@ -350,14 +445,21 @@ body {
   line-height: 1.4;
 }
 
-/* Slide-over */
+/* ===== SLIDE-OVER PANEL ===== */
+/* Note: Claude AI assisted with slide-over animation and backdrop implementation */
+
+/* Semi-transparent backdrop overlay */
 .slide-over-backdrop {
   position: fixed;
   inset: 0;
+  /* Cover entire viewport */
   background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black */
   z-index: 50;
+  /* Above other content */
 }
 
+/* Slide-over panel with entrance animation */
 .slide-over-panel {
   position: absolute;
   right: 0;
@@ -367,18 +469,25 @@ body {
   background-color: #2a2a2a;
   border-left: 1px solid #3a3a3a;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  /* Deep shadow */
   animation: slideIn 0.3s ease-out;
+  /* Entrance animation */
 }
 
+/* Slide-in animation keyframes */
 @keyframes slideIn {
   from {
     transform: translateX(100%);
+    /* Start off-screen to the right */
   }
+
   to {
     transform: translateX(0);
+    /* End at normal position */
   }
 }
 
+/* Slide-over header with title and close button */
 .slide-over-header {
   display: flex;
   align-items: center;
@@ -387,12 +496,14 @@ body {
   border-bottom: 1px solid #3a3a3a;
 }
 
+/* Slide-over title */
 .slide-over-header h2 {
   font-size: 18px;
   font-weight: 600;
   margin: 0;
 }
 
+/* Close button styling */
 .slide-over-header button {
   background: none;
   border: none;
@@ -401,17 +512,22 @@ body {
   padding: 4px;
 }
 
+/* Close button hover state */
 .slide-over-header button:hover {
   color: white;
 }
 
+/* Scrollable slide-over content area */
 .slide-over-content {
   padding: 24px;
   height: calc(100% - 80px);
+  /* Account for header height */
   overflow-y: auto;
+  /* Allow scrolling */
 }
 
-/* Search actions */
+/* ===== SEARCH ACTIONS ===== */
+/* Search input and action buttons in slide-over */
 .search-actions {
   display: flex;
   align-items: center;
@@ -419,77 +535,112 @@ body {
   margin-bottom: 24px;
 }
 
+/* Search input inside slide-over */
 .search-actions input {
   flex: 1;
+  /* Take remaining space */
   background-color: #3a3a3a;
   color: white;
   padding: 8px 12px 8px 40px;
+  /* Left padding for search icon */
   border-radius: 6px;
   border: 1px solid #4a4a4a;
   font-size: 14px;
 }
 
-/* Variable categories */
+/* ===== VARIABLE CATEGORIES ===== */
+/* Variable category sections with enhanced spacing */
 .variable-category {
-  margin-bottom: 32px; /* Much larger spacing */
-  padding: 0 4px; /* Subtle padding */
+  margin-bottom: 32px;
+  /* Much larger spacing between categories */
+  padding: 0 4px;
+  /* Subtle padding */
 }
 
+/* Category title with bold, uppercase styling */
 .category-title {
   font-size: 15px;
-  font-weight: 700; /* Much bolder */
-  color: #ffffff; /* Pure white instead of #ccc */
-  margin-bottom: 20px; /* More space */
-  text-transform: uppercase; /* Make it stand out */
+  font-weight: 700;
+  /* Much bolder than default */
+  color: #ffffff;
+  /* Pure white instead of #ccc */
+  margin-bottom: 20px;
+  /* More space below title */
+  text-transform: uppercase;
+  /* Make it stand out */
   letter-spacing: 0.5px;
+  /* Slight letter spacing */
 }
 
+/* Container for variable tag buttons */
 .variable-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px; /* Significantly larger gap */
+  gap: 16px;
+  /* Significantly larger gap between tags */
   margin-bottom: 12px;
 }
 
+/* ===== VARIABLE TAGS ===== */
+/* Interactive variable selection tags with enhanced styling */
+/* Note: Claude AI assisted with tag styling, hover effects, and active states */
 .variable-tag {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px; /* More substantial padding */
-  border-radius: 30px; /* Very rounded */
+  padding: 10px 18px;
+  /* More substantial padding for pill shape */
+  border-radius: 30px;
+  /* Very rounded for pill appearance */
   font-size: 14px;
-  font-weight: 600; /* Much bolder text */
-  border: 2px solid; /* Thicker border */
+  font-weight: 600;
+  /* Much bolder text for readability */
+  border: 2px solid;
+  /* Thicker border for visual emphasis */
   cursor: pointer;
   transition: all 0.2s;
+  /* Smooth transitions for all properties */
   background: none;
   white-space: nowrap;
-  min-height: 36px; /* Ensure consistent height */
+  /* Prevent text wrapping */
+  min-height: 36px;
+  /* Ensure consistent height across all tags */
 }
 
+/* Active state for selected variables */
 .variable-tag.active {
   background-color: #9fef00;
-  color: #000000; /* Pure black for contrast */
+  /* Brand green background */
+  color: #000000;
+  /* High contrast black text */
   border-color: #9fef00;
-  box-shadow: 0 4px 12px rgba(159, 239, 0, 0.3); /* More prominent shadow */
-  transform: translateY(-1px); /* Slight lift effect */
+  box-shadow: 0 4px 12px rgba(159, 239, 0, 0.3);
+  /* Subtle glow effect */
+  transform: translateY(-1px);
+  /* Slight lift effect */
 }
 
-
+/* Inactive state styling */
 .variable-tag:not(.active) {
-  background-color: #333333; /* Slightly lighter gray */
-  color: #ffffff; /* Pure white text */
+  background-color: #333333;
+  /* Slightly lighter gray background */
+  color: #ffffff;
+  /* Pure white text */
   border-color: #555555;
 }
 
+/* Hover effect for inactive tags */
 .variable-tag:not(.active):hover {
   border-color: #9fef00;
+  /* Green border on hover */
   background-color: #444444;
+  /* Slightly lighter background */
   transform: translateY(-1px);
+  /* Consistent lift effect */
 }
 
-
-/* Context panel */
+/* ===== CONTEXT PANEL ===== */
+/* Variable details context panel */
 .context-panel {
   background-color: #3a3a3a;
   border: 1px solid #4a4a4a;
@@ -498,6 +649,7 @@ body {
   margin-bottom: 16px;
 }
 
+/* Context panel title with icon */
 .context-title {
   display: flex;
   align-items: center;
@@ -506,6 +658,7 @@ body {
   font-weight: 500;
 }
 
+/* Context panel description text */
 .context-text {
   font-size: 14px;
   color: #ccc;
@@ -513,7 +666,8 @@ body {
   margin: 0;
 }
 
-/* Collapsible sections */
+/* ===== COLLAPSIBLE SECTIONS ===== */
+/* Collapsible section buttons with green text */
 .collapsible-section {
   width: 100%;
   display: flex;
@@ -527,51 +681,69 @@ body {
   cursor: pointer;
   margin-bottom: 12px;
   border: none;
-  color: #9fef00; /* Green text color */
+  color: #9fef00;
+  /* Green text color matching brand */
   transition: background-color 0.2s;
 }
 
+/* Collapsible section hover state */
 .collapsible-section:hover {
   background-color: #4a4a4a;
+  /* Darker background on hover */
 }
 
-/* Utilities */
+/* ===== UTILITY CLASSES ===== */
+/* Brand accent color utility */
 .text-accent {
   color: #9fef00;
+  /* Brand green color */
 }
 
+/* Muted text utility */
 .text-muted {
   color: #888;
+  /* Gray muted text */
 }
 
-/* Custom Chart Tooltip */
+/* ===== CUSTOM CHART TOOLTIP ===== */
+/* Note: Claude AI assisted with tooltip positioning, animation, and conditional styling */
+
+/* Main tooltip container with entrance animation */
 .custom-tooltip {
   background-color: #2a2a2a;
   border: 1px solid #3a3a3a;
   border-radius: 8px;
   padding: 12px 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  /* Deep shadow for depth */
   position: relative;
   min-width: 160px;
   animation: tooltipFadeIn 0.2s ease-out;
+  /* Smooth fade-in animation */
   font-family: 'Inter', sans-serif;
 }
 
+/* Tooltip entrance animation */
 @keyframes tooltipFadeIn {
   from {
     opacity: 0;
     transform: translateY(-4px);
+    /* Start slightly above final position */
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+    /* End at normal position */
   }
 }
 
+/* Tooltip header section */
 .tooltip-header {
   margin-bottom: 6px;
 }
 
+/* Month label in tooltip */
 .tooltip-month {
   font-size: 13px;
   font-weight: 600;
@@ -579,12 +751,14 @@ body {
   margin: 0;
 }
 
+/* Tooltip content container */
 .tooltip-content {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
+/* Value display in tooltip */
 .tooltip-value {
   font-size: 13px;
   color: #ccc;
@@ -592,6 +766,7 @@ body {
   margin: 0;
 }
 
+/* Performance insight styling with conditional colors */
 .tooltip-insight {
   font-size: 12px;
   font-weight: 500;
@@ -601,32 +776,48 @@ body {
   margin: 2px 0 0 0;
 }
 
+/* Positive performance indicator (above target) */
 .tooltip-insight.positive {
   color: #22c55e;
+  /* Green text */
   background-color: rgba(34, 197, 94, 0.15);
+  /* Subtle green background */
   border: 1px solid rgba(34, 197, 94, 0.3);
+  /* Green border */
 }
 
+/* Negative performance indicator (below target) */
 .tooltip-insight.negative {
   color: #ef4444;
+  /* Red text */
   background-color: rgba(239, 68, 68, 0.15);
+  /* Subtle red background */
   border: 1px solid rgba(239, 68, 68, 0.3);
+  /* Red border */
 }
 
-/* Custom scrollbar */
+/* ===== CUSTOM SCROLLBAR ===== */
+/* Custom scrollbar styling to match dark theme */
 ::-webkit-scrollbar {
   width: 6px;
+  /* Thin scrollbar width */
 }
 
+/* Scrollbar track (background) */
 ::-webkit-scrollbar-track {
   background: #2a2a2a;
+  /* Dark track matching UI */
 }
 
+/* Scrollbar thumb (draggable part) */
 ::-webkit-scrollbar-thumb {
   background: #4a4a4a;
+  /* Medium gray thumb */
   border-radius: 3px;
 }
 
+/* Scrollbar thumb hover state */
 ::-webkit-scrollbar-thumb:hover {
   background: #5a5a5a;
+  /* Lighter gray on hover */
 }

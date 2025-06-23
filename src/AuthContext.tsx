@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  type User, 
-  signInWithEmailAndPassword, 
+import {
+  type User,
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
@@ -47,7 +47,7 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   // State for currently authenticated user
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  
+
   // Loading state to prevent rendering before auth state is determined
   const [loading, setLoading] = useState(true);
 
@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Creates new user account with Firebase Authentication
    */
   function signup(email: string, password: string) {
-    return createUserWithEmailAndPassword(auth, email, password).then(() => {});
+    return createUserWithEmailAndPassword(auth, email, password).then(() => { });
   }
 
   /**
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * Authenticates existing user with Firebase Authentication
    */
   function login(email: string, password: string) {
-    return signInWithEmailAndPassword(auth, email, password).then(() => {});
+    return signInWithEmailAndPassword(auth, email, password).then(() => { });
   }
 
   /**
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   function loginWithGoogle() {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider).then(() => {});
+    return signInWithPopup(auth, provider).then(() => { });
   }
 
   /**
