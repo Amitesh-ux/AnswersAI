@@ -1,36 +1,57 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 
+/**
+ * Login Component
+ * Provides user authentication interface with email/password and Google OAuth
+ * Handles both login and registration flows in a single component
+ */
 export function Login() {
+  // Form state management
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);  // Toggle between login and signup modes
+  const [error, setError] = useState('');           // Error message display
+  const [loading, setLoading] = useState(false);    // Loading state for form submission
   
+  // Extract authentication functions from context
   const { login, signup, loginWithGoogle } = useAuth();
 
+  /**
+   * Handles form submission for both login and signup
+   * Validates password length and calls appropriate auth function
+   * Note: Claude AI assisted with form validation and error handling patterns
+   */
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    // Basic password validation
     if (password.length < 6) {
       return setError('Password must be at least 6 characters');
     }
 
     try {
+      // Clear any previous errors
       setError('');
       setLoading(true);
+      
+      // Call appropriate auth function based on current mode
       if (isSignUp) {
         await signup(email, password);
       } else {
         await login(email, password);
       }
     } catch (error: any) {
+      // Display user-friendly error message
       setError('Failed to ' + (isSignUp ? 'create account' : 'sign in'));
     }
     setLoading(false);
   }
 
+  /**
+   * Handles Google OAuth login
+   * Provides social authentication option for better user experience
+   */
   async function handleGoogleLogin() {
     try {
       setError('');
@@ -51,6 +72,7 @@ export function Login() {
       justifyContent: 'center',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
+      {/* Login Card Container */}
       <div style={{
         backgroundColor: '#2a2a2a',
         padding: '40px',
@@ -58,6 +80,7 @@ export function Login() {
         width: '400px',
         maxWidth: '90vw'
       }}>
+        {/* Dynamic title based on current mode */}
         <h2 style={{ 
           color: '#fff', 
           textAlign: 'center', 
@@ -67,6 +90,7 @@ export function Login() {
           {isSignUp ? 'Create Account' : 'Sign In'}
         </h2>
         
+        {/* Error Message Display */}
         {error && (
           <div style={{
             backgroundColor: '#ff4444',
@@ -80,7 +104,9 @@ export function Login() {
           </div>
         )}
 
+        {/* Email/Password Form */}
         <form onSubmit={handleSubmit}>
+          {/* Email Input Field */}
           <div style={{ marginBottom: '20px' }}>
             <input
               type="email"
@@ -101,6 +127,7 @@ export function Login() {
             />
           </div>
           
+          {/* Password Input Field */}
           <div style={{ marginBottom: '20px' }}>
             <input
               type="password"
@@ -121,6 +148,7 @@ export function Login() {
             />
           </div>
 
+          {/* Submit Button - Dynamic text and disabled state during loading */}
           <button
             disabled={loading}
             type="submit"
@@ -142,6 +170,7 @@ export function Login() {
           </button>
         </form>
 
+        {/* Google OAuth Button */}
         <button
           disabled={loading}
           onClick={handleGoogleLogin}
@@ -161,6 +190,7 @@ export function Login() {
           {loading ? 'Loading...' : 'Sign in with Google'}
         </button>
 
+        {/* Mode Toggle - Switch between login and signup */}
         <div style={{ textAlign: 'center' }}>
           <button
             type="button"
