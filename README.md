@@ -79,16 +79,12 @@ src/
 
 **Recharts for Visualization**: Used established charting library for reliability and built-in interactions. Trade-off was additional dependency vs custom SVG implementation.
 
-**Firebase Authentication**: Implemented real authentication instead of mock system for production-like experience. Added setup complexity but provides realistic user flows.
-
 **Context API for State**: Used React Context for authentication state, local state for UI interactions. Simple approach suitable for app scale.
 
 ## Known Limitations
 
-- No unit tests implemented due to time constraints
-- Error handling could be more comprehensive  
-- Mobile experience could use gesture-specific optimizations
-- Chart animation could be smoother on data updates
+- Limited error handling and no unit tests due to time constraints
+- Basic mobile support; gesture interactions and animations can be improved
 
 ## Time Spent
 
