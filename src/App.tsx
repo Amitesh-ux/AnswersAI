@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Home, Zap, BarChart3, Settings, Wrench, Search, RefreshCw, Upload, X, Plus, ChevronDown, Info } from 'lucide-react';
 
@@ -71,7 +71,7 @@ function Dashboard() {
   const [editVariablesOpen, setEditVariablesOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('Carbon');
   const [selectedVariables, setSelectedVariables] = useState<string[]>(['co2-distribution', 'fleet-sizing']);
-  const [hoveredVariable, setHoveredVariable] = useState<string | null>(null);
+  const [_hoveredVariable, setHoveredVariable] = useState<string | null>(null);
   const [showContext, setShowContext] = useState<string | null>(null);
 
   // Timer ref for implementing hover delay on variable context panels

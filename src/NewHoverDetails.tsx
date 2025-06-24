@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 
 /**
  * Props interface for the custom chart tooltip component
@@ -22,7 +22,7 @@ export function NewHoverDetails({ active, payload, label }: NewHoverDetailsProps
   }
 
   // Extract data from the first payload item (single line chart)
-  const data = payload[0].payload;
+  //const data = payload[0].payload;
   const value = payload[0].value;
 
   // Target value for performance comparison (could be made dynamic)
@@ -37,7 +37,7 @@ export function NewHoverDetails({ active, payload, label }: NewHoverDetailsProps
    * Provides specific insights for each month with realistic performance metrics
    * Note: Claude AI assisted with creating realistic business insights
    */
-  const getInsight = (month: string, val: number) => {
+  const getInsight = (month: string, _val: number) => {
     // Pre-defined insights for each month to provide realistic business context
     if (month === 'Jul') return '18.2% above target';
     if (month === 'Aug') return '4.6% above target';
