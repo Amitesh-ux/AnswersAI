@@ -71,7 +71,7 @@ function Dashboard() {
   const [editVariablesOpen, setEditVariablesOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('Carbon');
   const [selectedVariables, setSelectedVariables] = useState<string[]>(['co2-distribution', 'fleet-sizing']);
-  const [_hoveredVariable, setHoveredVariable] = useState<string | null>(null);
+  const [_hoveredVariable, _setHoveredVariable] = useState<string | null>(null);
   const [showContext, setShowContext] = useState<string | null>(null);
 
   // Timer ref for implementing hover delay on variable context panels
@@ -84,7 +84,7 @@ function Dashboard() {
    * This prevents context panel flickering during quick mouse movements
    */
   const handleVariableHover = (variableId: string) => {
-    setHoveredVariable(variableId);
+    _setHoveredVariable(variableId);
     // Clear existing timer to reset delay
     if (hoverTimer.current) {
       clearTimeout(hoverTimer.current);
@@ -100,7 +100,7 @@ function Dashboard() {
    * Immediately hides context panel and clears hover timer
    */
   const handleVariableLeave = () => {
-    setHoveredVariable(null);
+    _setHoveredVariable(null);
     setShowContext(null);
     if (hoverTimer.current) {
       clearTimeout(hoverTimer.current);

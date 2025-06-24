@@ -22,7 +22,7 @@ export function NewHoverDetails({ active, payload, label }: NewHoverDetailsProps
   }
 
   // Extract data from the first payload item (single line chart)
-  //const data = payload[0].payload;
+  //const _data = payload[0].payload;
   const value = payload[0].value;
 
   // Target value for performance comparison (could be made dynamic)
